@@ -4,6 +4,8 @@ const adminRoute = require("./admin/Routes/adminRoutes");
 const app = express();
 
 const cookieParser = require("cookie-parser");
+const eventRouter = require("./admin/Routes/eventsRoute/upcomingEvent");
+const eventCalendarRouter = require("./admin/Routes/eventsRoute/eventCalendar");
 
 app.use(cookieParser());
 
@@ -11,6 +13,8 @@ require("dotenv").config();
 require("./utils/dataBase");
 app.use("/", userRouter);
 app.use("/", adminRoute);
+app.use("/", eventRouter);
+app.use("/", eventCalendarRouter);
 app.listen(1998, async () => {
 	console.log("successfully listening to the 1998 port");
 });
