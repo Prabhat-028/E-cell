@@ -3,7 +3,7 @@ const adminAuth = require("../../../middlewares/adminAuth");
 const eventsModel = require("../../../models/EventModel/eventsModel");
 const eventRouter = express.Router();
 
-eventRouter.post("/admin/upcomingevent/", adminAuth, async (req, res) => {
+eventRouter.post("/admin/upcomingevent", adminAuth, async (req, res) => {
 	try {
 
 		const { photoUrl, scheduledDate, eventName, speaker } = req.body;
@@ -29,14 +29,16 @@ eventRouter.post("/admin/upcomingevent/", adminAuth, async (req, res) => {
 eventRouter.patch("/admin/upcomingevent/:_id", adminAuth, async (req, res) => {
 	try {
 		const { _id } = req.params;
+		
 		if(!_id)throw new Error("Event Not Found");
 		
         const { photoUrl, scheduledDate, eventName, speaker } = req.body;
         const eventData = await eventsModel.findByIdAndUpdate(
             { _id },
             { photoUrl, scheduledDate, eventName, speaker },
-		);
-		if(eventData)throw new Error("Requested Event Not Found");
+            { new: true },
+        );
+		if(!eventData)throw new Error("Requested Event Not Found");
 		
 		const savedEventData = await eventData.save();
 		if(!savedEventData)throw new Error("Something Went Wrong!!");

@@ -6,13 +6,27 @@ const adminRoute = express.Router();
 // ---------------- SIGNUP ----------------
 
 adminRoute.post("/admin/signup", async (req, res) => {
-    try {
+	try {
+		console.log(req.body)
         const { email, password } = req.body;
 
-        const exists = await adminModel.findOne({ email });
-        if (exists) {
-            return res.status(400).json({ message: "Admin already exists" });
-        }
+		 if (!email || !password) {
+             return res
+                 .status(400)
+                 .json({ message: "Email and password required" });
+         }
+
+         if (password.length < 6) {
+             return res
+                 .status(400)
+                 .json({ message: "Password must be at least 6 characters" });
+         }
+
+         // 🔹 Check if admin already exists
+         const exists = await adminModel.findOne({ email });
+         if (exists) {
+             return res.status(409).json({ message: "Admin already exists" });
+         }
 
         const admin = new adminModel({ email, password });
         await admin.save();
