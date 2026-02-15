@@ -47,9 +47,10 @@ coreTeamRouter.post("/admin/coreteam", adminAuth, async (req, res) => {
 });
 
 // ✅ UPDATE MEMBER
-coreTeamRouter.patch("/admin/coreteam/:id", adminAuth, async (req, res) => {
+coreTeamRouter.patch("/admin/coreteam/:_id", adminAuth, async (req, res) => {
     try {
-        const { id } = req.params;
+		const { _id } = req.params;
+		if (!_id) return res.status(400).json({ message: "_id is expected to be in the params" });
         const { photoUrl, fullName, designation } = req.body;
 
         if (!photoUrl || !fullName || !designation) {
@@ -59,7 +60,7 @@ coreTeamRouter.patch("/admin/coreteam/:id", adminAuth, async (req, res) => {
         }
 
         const updatedData = await coreTeamModel.findByIdAndUpdate(
-            id,
+            _id,
             { photoUrl, fullName, designation },
             { new: true, runValidators: true },
         );
