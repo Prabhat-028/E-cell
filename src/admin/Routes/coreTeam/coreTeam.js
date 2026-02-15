@@ -81,4 +81,29 @@ coreTeamRouter.patch("/admin/coreteam/:_id", adminAuth, async (req, res) => {
     }
 });
 
+//delete the member
+
+coreTeamRouter.delete("/admin/coreteam/delete/:_id", adminAuth, async (req, res) => {
+    try {
+        const { _id } = req.params;
+        if (!_id)
+            return res
+                .status(400)
+                .json({ message: "_id is expected to be in the params" });
+        
+        const updatedData = await coreTeamModel.findByIdAndDelete(
+            _id,
+        );
+
+        res.status(200).json({
+            message: "Member Deleted successfully",
+            data: updatedData,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
+});
+
+
 module.exports = coreTeamRouter;
