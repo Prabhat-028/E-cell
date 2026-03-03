@@ -12,6 +12,9 @@ const coreTeamRouter = require("./admin/Routes/coreTeam/coreTeam");
 const collaborationRouter = require("./admin/Routes/collaborations/collaborationsRoute");
 app.use(cookieParser());
 
+const cors = require("cors");
+app.use(cors({ origin: "*" }));
+
 require("dotenv").config();
 require("./utils/dataBase");
 app.use("/", userRouter);

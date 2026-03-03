@@ -1,6 +1,8 @@
 const express = require("express");
 const adminAuth = require("../../../middlewares/adminAuth");
 const collaborationModel = require("../../../models/collaborationModel/collaborationSchema");
+const upload = require("../../../middlewares/multer");
+const { uploadOnCloudinary } = require("../../../utils/cloudinary");
 
 const collaborationRouter = express.Router();
 
@@ -49,19 +51,30 @@ collaborationRouter.get(
 // ✅ CREATE COLLABORATION
 collaborationRouter.post(
     "/admin/collaborations",
-    adminAuth,
+    adminAuth,upload.fields([
+		{
+			name: "collaborationImage",
+			maxCount:1,
+		},
+	]) ,
     async (req, res) => {
         try {
-            const { photoUrl, name, about } = req.body;
-
-            if (!photoUrl || !name || !about) {
+            const { name, about } = req.body;
+            
+            if (!name || !about) {
                 return res.status(400).json({
                     message: "All fields are mandatory",
                 });
             }
-
+			const collaborationImageLocalPath = req.files?.collaborationImage[0]?.path;
+			if (!collaborationImageLocalPath) {
+                return res.status(409).json({
+                    message: "Avatar Image is required!!",
+                });
+            }
+			const collaborationImage = await uploadOnCloudinary.upload(collaborationImageLocalPath);
             const collaborationData = await collaborationModel.create({
-                photoUrl,
+                photoUrl:collaborationImage.url,
                 name,
                 about,
             });

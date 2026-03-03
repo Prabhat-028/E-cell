@@ -1,14 +1,29 @@
 const express = require("express");
 const adminAuth = require("../../../middlewares/adminAuth");
 const eventsModel = require("../../../models/EventModel/eventsModel");
+const { uploadOnCloudinary } = require("../../../utils/cloudinary");
 const eventRouter = express.Router();
+const upload = require("../../../middlewares/multer");
 
-eventRouter.post("/admin/upcomingevent", adminAuth, async (req, res) => {
+eventRouter.post("/admin/upcomingevent", adminAuth,upload.fields([
+		{
+			name: "upcomingEventsBanner",
+			maxCount:1,
+		},
+	]), async (req, res) => {
 	try {
 
-		const { photoUrl, scheduledDate, eventName, speaker } = req.body;
+		const { scheduledDate, eventName, speaker } = req.body;
+		const upcomingEventsBannerPath = req.files?.upcomingEventsBanner?.[0]?.path;
+		if (!upcomingEventsBannerPath) {
+			return res.status(400).json({ message: "Banner of the upcoming event is required" });
+
+		}
+		const upcomingEventCloudinary = await uploadOnCloudinary.upload(
+            upcomingEventsBannerPath,
+        );
         const eventData = new eventsModel({
-            photoUrl,
+            photoUrl:upcomingEventCloudinary.url,
             scheduledDate,
             eventName,
             speaker,
@@ -32,10 +47,10 @@ eventRouter.patch("/admin/upcomingevent/:_id", adminAuth, async (req, res) => {
 		
 		if(!_id)throw new Error("Event Not Found");
 		
-        const { photoUrl, scheduledDate, eventName, speaker } = req.body;
+        const {scheduledDate, eventName, speaker } = req.body;
         const eventData = await eventsModel.findByIdAndUpdate(
             { _id },
-            { photoUrl, scheduledDate, eventName, speaker },
+            {scheduledDate, eventName, speaker },
             { new: true },
         );
 		if(!eventData)throw new Error("Requested Event Not Found");
