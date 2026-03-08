@@ -13,7 +13,7 @@ const collaborationRouter = require("./admin/Routes/collaborations/collaboration
 app.use(cookieParser());
 
 const cors = require("cors");
-app.use(cors({ origin: "*" }));
+app.use(cors({ origin:process.env.ORIGIN  }));
 
 require("dotenv").config();
 require("./utils/dataBase");

@@ -66,10 +66,10 @@ collaborationRouter.post(
                     message: "All fields are mandatory",
                 });
             }
-			const collaborationImageLocalPath = req.files?.collaborationImage[0]?.path;
+			const collaborationImageLocalPath = req.files?.collaborationImage?.[0]?.path;
 			if (!collaborationImageLocalPath) {
                 return res.status(409).json({
-                    message: "Avatar Image is required!!",
+                    message: "Collaboration Event Image is required!!",
                 });
             }
 			const collaborationImage = await uploadOnCloudinary.upload(collaborationImageLocalPath);
