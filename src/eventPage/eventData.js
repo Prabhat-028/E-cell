@@ -6,7 +6,7 @@ const eventRouterList = express.Router();
 // =============================
 // Upcoming Events
 // =============================
-eventRouterList.get("/event/upcomingData", async (req, res) => {
+eventRouterList.get("/event/upcomingEvent", async (req, res) => {
     try {
   
 

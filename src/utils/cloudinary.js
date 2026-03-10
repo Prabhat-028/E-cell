@@ -16,17 +16,15 @@ const uploadOnCloudinary = async (localFilePath) => {
             resource_type: "auto",
         });
 
-        // delete temp file after upload
-        fs.unlinkSync(localFilePath);
+        await fs.promises.unlink(localFilePath);
 
         return response;
     } catch (error) {
-        // delete file if upload fails
         if (localFilePath && fs.existsSync(localFilePath)) {
-            fs.unlinkSync(localFilePath);
+            await fs.promises.unlink(localFilePath);
         }
 
-        throw error; // re-throw so controller can catch it
+        throw error;
     }
 };
 

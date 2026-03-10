@@ -12,6 +12,10 @@ const coreTeamSchema = new mongoose.Schema({
 	designation: {
 		type: String,
 		required: true
+	},
+	isActive: {
+		type: Boolean,
+		required:true,
 	}
 },{timestamps:true});
 module.exports = mongoose.model("CoreTeam", coreTeamSchema);

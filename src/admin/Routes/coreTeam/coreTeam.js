@@ -23,14 +23,14 @@ coreTeamRouter.get("/admin/coreTeam/members", adminAuth, async (req, res) => {
 });
 
 // ✅ ADD NEW MEMBER
-coreTeamRouter.post("/admin/coreteam", adminAuth,upload.fields([
+coreTeamRouter.post("/admin/coreteam/addNewMember", adminAuth,upload.fields([
 		{
 			name: "memberImage",
 			maxCount:1,
 		},
 	]) , async (req, res) => {
     try {
-		const { fullName, designation } = req.body;
+		const { fullName, designation,isActive } = req.body;
 		 if (!fullName || !designation) {
              return res.status(400).json({
                  message: "All fields are mandatory",
@@ -49,7 +49,8 @@ coreTeamRouter.post("/admin/coreteam", adminAuth,upload.fields([
         const teamData = await coreTeamModel.create({
             photoUrl:memberImageCloudinary.url,
             fullName,
-            designation,
+			designation,
+			isActive,
         });
 
         res.status(201).json({
@@ -67,9 +68,9 @@ coreTeamRouter.patch("/admin/coreteam/:_id", adminAuth, async (req, res) => {
     try {
 		const { _id } = req.params;
 		if (!_id) return res.status(400).json({ message: "_id is expected to be in the params" });
-        const {  fullName, designation } = req.body;
+        const {  fullName, designation,isActive } = req.body;
 
-        if (!fullName || !designation) {
+        if (!fullName || !designation || !isActive) {
             return res.status(400).json({
                 message: "All fields are mandatory",
             });
@@ -77,7 +78,7 @@ coreTeamRouter.patch("/admin/coreteam/:_id", adminAuth, async (req, res) => {
 
         const updatedData = await coreTeamModel.findByIdAndUpdate(
             _id,
-            { fullName, designation },
+            { fullName, designation,isActive },
             { new: true, runValidators: true },
         );
 

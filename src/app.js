@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const userRouter = require("./Routers/routes");
 const adminRoute = require("./admin/Routes/adminRoutes");
@@ -13,9 +14,9 @@ const collaborationRouter = require("./admin/Routes/collaborations/collaboration
 app.use(cookieParser());
 
 const cors = require("cors");
-app.use(cors({ origin:process.env.ORIGIN  }));
+const coreTeam = require("./Routers/coreTeamRoute");
+app.use(cors({ origin: process.env.ORIGIN }));
 
-require("dotenv").config();
 require("./utils/dataBase");
 app.use("/", userRouter);
 app.use("/", adminRoute);
@@ -24,7 +25,8 @@ app.use("/", eventCalendarRouter);
 app.use("/", eventRouterList);
 app.use("/", coreTeamRouter);
 app.use("/", collaborationRouter);
+app.use("/", coreTeam);
 
 app.listen(process.env.PORT, async () => {
-	console.log("successfully listening to the 1998 port");
+    console.log("successfully listening to the 1998 port");
 });

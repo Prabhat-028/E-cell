@@ -12,14 +12,14 @@ eventRouter.post("/admin/upcomingevent", adminAuth,upload.fields([
 		},
 	]), async (req, res) => {
 	try {
-
+		
 		const { scheduledDate, eventName, speaker } = req.body;
 		const upcomingEventsBannerPath = req.files?.upcomingEventsBanner?.[0]?.path;
 		if (!upcomingEventsBannerPath) {
 			return res.status(400).json({ message: "Banner of the upcoming event is required" });
 
 		}
-		const upcomingEventCloudinary = await uploadOnCloudinary.upload(
+		const upcomingEventCloudinary = await uploadOnCloudinary(
             upcomingEventsBannerPath,
         );
         const eventData = new eventsModel({

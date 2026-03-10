@@ -1,5 +1,6 @@
 const express = require("express");
 const userModel = require("../models/userModel");
+const eventsModel = require("../models/EventModel/eventsModel");
 const userRouter = express.Router();
 
 userRouter.post("/form", async (req, res) => {
@@ -15,4 +16,5 @@ userRouter.post("/form", async (req, res) => {
         res.status(404).json({ message: "something went wrong!!" });
     }
 });
+
 module.exports = userRouter;
