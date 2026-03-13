@@ -4,7 +4,7 @@ const router = express.Router();
 
 
 // CREATE STARTUP
-router.post("/startup", async (req, res) => {
+router.post("/admin/startup", async (req, res) => {
     try {
         const startup = new startUpListModels(req.body);
         await startup.save();
@@ -19,7 +19,7 @@ router.post("/startup", async (req, res) => {
 });
 
 // GET ALL STARTUPS
-router.get("/startup", async (req, res) => {
+router.get("/admin/startup", async (req, res) => {
     try {
         const startups = await startUpListModels.find().sort({ createdAt: -1 });
 
@@ -33,7 +33,7 @@ router.get("/startup", async (req, res) => {
 });
 
 // GET SINGLE STARTUP
-router.get("/startup/:id", async (req, res) => {
+router.get("/admin/startup/:id", async (req, res) => {
     try {
         const startup = await startUpListModels.findById(req.params.id);
 
@@ -51,7 +51,7 @@ router.get("/startup/:id", async (req, res) => {
 });
 
 // UPDATE STARTUP
-router.put("/startup/:id", async (req, res) => {
+router.put("/admin/startup/:id", async (req, res) => {
     try {
         const startup = await startUpListModels.findByIdAndUpdate(
             req.params.id,
@@ -73,7 +73,7 @@ router.put("/startup/:id", async (req, res) => {
 });
 
 // DELETE STARTUP
-router.delete("/startup/:id", async (req, res) => {
+router.delete("/admin/startup/:id", async (req, res) => {
     try {
         const startup = await startUpListModels.findByIdAndDelete(
             req.params.id,

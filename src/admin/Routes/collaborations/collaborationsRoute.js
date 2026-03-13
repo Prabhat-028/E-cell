@@ -6,7 +6,7 @@ const { uploadOnCloudinary } = require("../../../utils/cloudinary");
 
 const collaborationRouter = express.Router();
 
-// ✅ GET ALL COLLABORATIONS
+//  GET ALL COLLABORATIONS
 collaborationRouter.get(
     "/admin/collaborations",
     adminAuth,
@@ -14,7 +14,10 @@ collaborationRouter.get(
         try {
             const data = await collaborationModel
                 .find()
-                .sort({ createdAt: -1 });
+				.sort({ createdAt: -1 });
+			if (data.length == 0) {
+				return res.status(200).json({ message: "NO Collaborations Found" });
+			}
 
             res.status(200).json({
                 message: "Collaborations fetched successfully",
@@ -27,7 +30,7 @@ collaborationRouter.get(
     },
 );
 
-// ✅ GET SINGLE COLLABORATION
+// GET SINGLE COLLABORATION
 collaborationRouter.get(
     "/admin/collaborations/:id",
     adminAuth,
@@ -48,9 +51,9 @@ collaborationRouter.get(
     },
 );
 
-// ✅ CREATE COLLABORATION
+// CREATE COLLABORATION
 collaborationRouter.post(
-    "/admin/collaborations",
+    "/admin/create/collaborations",
     adminAuth,upload.fields([
 		{
 			name: "collaborationImage",
@@ -72,7 +75,7 @@ collaborationRouter.post(
                     message: "Collaboration Event Image is required!!",
                 });
             }
-			const collaborationImage = await uploadOnCloudinary.upload(collaborationImageLocalPath);
+			const collaborationImage = await uploadOnCloudinary(collaborationImageLocalPath);
             const collaborationData = await collaborationModel.create({
                 photoUrl:collaborationImage.url,
                 name,
