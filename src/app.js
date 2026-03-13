@@ -16,6 +16,8 @@ app.use(cookieParser());
 const cors = require("cors");
 const coreTeam = require("./Routers/coreTeamRoute");
 const pastMemberRouter = require("./Routers/pastMembers.routes");
+const router = require("./admin/Routes/startupList");
+const startUpRoute = require("./Routers/startUp.Route");
 app.use(cors({ origin: process.env.ORIGIN }));
 
 require("./utils/dataBase");
@@ -28,7 +30,8 @@ app.use("/", coreTeamRouter);
 app.use("/", collaborationRouter);
 app.use("/", coreTeam);
 app.use("/", pastMemberRouter);
-
+app.use("/", router);
+app.use("/", startUpRoute);
 app.listen(process.env.PORT, async () => {
     console.log("successfully listening to the 1998 port");
 });

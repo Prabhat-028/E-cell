@@ -9,7 +9,7 @@ pastMemberRouter.get("/pastMembers", async (req, res) => {
 
         if (pastMembersList.length === 0) {
             return res.status(200).json({
-                message: "No past members found.",
+                message: "No past members record found.",
                 data: [],
             });
         }
