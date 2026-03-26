@@ -1,19 +1,28 @@
 const express = require("express");
 const userModel = require("../models/userModel");
-const eventsModel = require("../models/EventModel/eventsModel");
 const userRouter = express.Router();
 
 userRouter.post("/form", async (req, res) => {
     try {
-        const formData = req.body;
-        if (mobileNo.length > 10 || mobileNo.length < 10) {
-            throw new Error("Please Enter Valid Moblie No");
+        const formData = req?.body;
+        const { mobileNo } = formData;
+
+        // Convert to string for length check
+        const mobileStr = mobileNo.toString();
+
+        if (mobileStr.length !== 10) {
+            return res
+                .status(400)
+                .json({ message: "Please enter valid mobile number" });
         }
-        const data = await new userModel.Save(formData);
+
+        const data = new userModel(formData);
+        await data.save();
+
         res.status(200).json({ message: "Form Submitted Successfully." });
     } catch (error) {
         console.log(error);
-        res.status(404).json({ message: "something went wrong!!" });
+        res.status(500).json({ message: "Something went wrong!!" });
     }
 });
 

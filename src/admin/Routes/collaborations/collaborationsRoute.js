@@ -17,7 +17,7 @@ collaborationRouter.get(
 				.sort({ createdAt: -1 });
 			if (data.length == 0) {
 				return res.status(200).json({ message: "NO Collaborations Found" });
-			}
+			} 
 
             res.status(200).json({
                 message: "Collaborations fetched successfully",
