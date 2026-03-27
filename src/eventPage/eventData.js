@@ -15,7 +15,7 @@ eventRouterList.get("/event/upcomingEvent", async (req, res) => {
             .sort({ scheduledDate: 1 }) 
 
         if (data.length === 0) {
-            return res.status(404).json({
+            return res.status(200).json({
                 message: "No upcoming events found",
                 count: 0,
                 data: [],
@@ -45,7 +45,7 @@ eventRouterList.get("/event/successfullEvent", async (req, res) => {
             .sort({ scheduledDate: -1 }) 
 
         if (data.length === 0) {
-            return res.status(404).json({
+            return res.status(200).json({
                 message: "No past events found",
                 count: 0,
                 data: [],
