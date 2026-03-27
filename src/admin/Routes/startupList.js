@@ -2,7 +2,6 @@ const express = require("express");
 const startUpListModels = require("../../models/startUpList/startUpList.models");
 const router = express.Router();
 
-
 // CREATE STARTUP
 router.post("/admin/startup", async (req, res) => {
     try {
@@ -10,6 +9,7 @@ router.post("/admin/startup", async (req, res) => {
         await startup.save();
 
         res.status(201).json({
+            // ✅ correct
             success: true,
             data: startup,
         });
@@ -23,7 +23,8 @@ router.get("/admin/startup", async (req, res) => {
     try {
         const startups = await startUpListModels.find().sort({ createdAt: -1 });
 
-        res.json({
+        res.status(200).json({
+            // ✅ added for consistency
             success: true,
             data: startups,
         });
@@ -38,10 +39,13 @@ router.get("/admin/startup/:id", async (req, res) => {
         const startup = await startUpListModels.findById(req.params.id);
 
         if (!startup) {
-            return res.status(404).json({ message: "Startup not found" });
+            return res.status(404).json({
+                message: "Startup not found",
+            });
         }
 
-        res.json({
+        res.status(200).json({
+            
             success: true,
             data: startup,
         });
@@ -63,7 +67,7 @@ router.put("/admin/startup/:id", async (req, res) => {
             return res.status(404).json({ message: "Startup not found" });
         }
 
-        res.json({
+        res.status(200).json({
             success: true,
             data: startup,
         });
@@ -83,7 +87,8 @@ router.delete("/admin/startup/:id", async (req, res) => {
             return res.status(404).json({ message: "Startup not found" });
         }
 
-        res.json({
+        res.status(200).json({
+           
             success: true,
             message: "Startup deleted successfully",
         });
