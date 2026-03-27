@@ -1,26 +1,43 @@
 require("dotenv").config();
+
 const express = require("express");
-const userRouter = require("./Routers/routes");
-const adminRoute = require("./admin/Routes/adminRoutes");
 const app = express();
+
+// 🔐 Core middlewares FIRST
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+
+// ✅ CORS must come before routes
+app.use(
+    cors({
+        origin: process.env.ORIGIN,
+        credentials: true,
+    }),
+);
+
+// ✅ Body parser
 app.use(express.json());
 
-const cookieParser = require("cookie-parser");
+// ✅ Cookie parser
+app.use(cookieParser());
+
+// 🗄️ Database connection
+require("./utils/dataBase");
+
+// 📦 Import routes
+const userRouter = require("./Routers/routes");
+const adminRoute = require("./admin/Routes/adminRoutes");
 const eventRouter = require("./admin/Routes/eventsRoute/upcomingEvent");
 const eventCalendarRouter = require("./admin/Routes/eventsRoute/eventCalendar");
 const eventRouterList = require("./eventPage/eventData");
 const coreTeamRouter = require("./admin/Routes/coreTeam/coreTeam");
 const collaborationRouter = require("./admin/Routes/collaborations/collaborationsRoute");
-app.use(cookieParser());
-
-const cors = require("cors");
 const coreTeam = require("./Routers/coreTeamRoute");
 const pastMemberRouter = require("./Routers/pastMembers.routes");
 const router = require("./admin/Routes/startupList");
 const startUpRoute = require("./Routers/startUp.Route");
-app.use(cors({ origin: process.env.ORIGIN }));
 
-require("./utils/dataBase");
+// 🚀 Routes AFTER middleware
 app.use("/", userRouter);
 app.use("/", adminRoute);
 app.use("/", eventRouter);
@@ -32,6 +49,8 @@ app.use("/", coreTeam);
 app.use("/", pastMemberRouter);
 app.use("/", router);
 app.use("/", startUpRoute);
-app.listen(process.env.PORT, async () => {
-    console.log("successfully listening to the 1998 port");
+
+// 🎯 Start server
+app.listen(process.env.PORT, () => {
+    console.log(`Server running on port ${process.env.PORT}`);
 });
