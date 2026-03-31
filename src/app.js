@@ -36,6 +36,7 @@ const coreTeam = require("./Routers/coreTeamRoute");
 const pastMemberRouter = require("./Routers/pastMembers.routes");
 const router = require("./admin/Routes/startupList");
 const startUpRoute = require("./Routers/startUp.Route");
+const collaborationRouterUser = require("./Routers/collaboration.routes");
 
 // 🚀 Routes AFTER middleware
 app.use("/", userRouter);
@@ -49,7 +50,7 @@ app.use("/", coreTeam);
 app.use("/", pastMemberRouter);
 app.use("/", router);
 app.use("/", startUpRoute);
-
+app.use("/", collaborationRouterUser);
 // 🎯 Start server
 app.listen(process.env.PORT, () => {
     console.log(`Server running on port ${process.env.PORT}`);

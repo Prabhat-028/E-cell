@@ -18,7 +18,7 @@ eventCalendarRouter.get("/admin/eventCalendar", adminAuth, async (req, res) => {
 
         // ✅ Proper empty check
         if (events.length === 0) {
-            return res.status(404).json({
+            return res.status(201).json({
                 message: "No upcoming events found",
             });
         }
