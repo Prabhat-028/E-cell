@@ -68,7 +68,7 @@ coreTeamRouter.patch("/admin/coreteam/:_id", adminAuth, async (req, res) => {
     try {
 		const { _id } = req.params;
 		if (!_id) return res.status(400).json({ message: "_id is expected to be in the params" });
-        const {  fullName, designation,isActive } = req.body;
+        const {  fullName, designation,isActive} = req.body;
 
         if (!fullName || !designation ) {
             return res.status(400).json({
