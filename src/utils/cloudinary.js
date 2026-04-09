@@ -1,31 +1,41 @@
 const cloudinary = require("cloudinary").v2;
-const fs = require("fs");
 
-// Configuration
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const uploadOnCloudinary = async (localFilePath) => {
-    try {
-        if (!localFilePath) return null;
-
-        const response = await cloudinary.uploader.upload(localFilePath, {
-            resource_type: "auto",
-        });
-
-        await fs.promises.unlink(localFilePath);
-
-        return response;
-    } catch (error) {
-        if (localFilePath && fs.existsSync(localFilePath)) {
-            await fs.promises.unlink(localFilePath);
-        }
-
-        throw error;
+const uploadOnCloudinary = async (fileBuffer, options = {}) => {
+    if (!fileBuffer || !Buffer.isBuffer(fileBuffer)) {
+        throw new Error(
+            "A valid file buffer is required for Cloudinary upload",
+        );
     }
+
+    return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+            {
+                resource_type: "auto",
+                ...options,
+            },
+            (error, result) => {
+                if (error) {
+                    return reject(error);
+                }
+
+                if (!result) {
+                    return reject(
+                        new Error("Cloudinary upload failed: empty response"),
+                    );
+                }
+
+                resolve(result);
+            },
+        );
+
+        stream.end(fileBuffer);
+    });
 };
 
 module.exports = { uploadOnCloudinary };

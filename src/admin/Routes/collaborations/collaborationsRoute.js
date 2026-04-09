@@ -14,10 +14,12 @@ collaborationRouter.get(
         try {
             const data = await collaborationModel
                 .find()
-				.sort({ createdAt: -1 });
-			if (data.length == 0) {
-				return res.status(200).json({ message: "NO Collaborations Found" });
-			} 
+                .sort({ createdAt: -1 });
+            if (data.length == 0) {
+                return res
+                    .status(200)
+                    .json({ message: "NO Collaborations Found" });
+            }
 
             res.status(200).json({
                 message: "Collaborations fetched successfully",
@@ -54,30 +56,38 @@ collaborationRouter.get(
 // CREATE COLLABORATION
 collaborationRouter.post(
     "/admin/create/collaborations",
-    adminAuth,upload.fields([
-		{
-			name: "collaborationImage",
-			maxCount:1,
-		},
-	]) ,
+    adminAuth,
+    upload.fields([
+        {
+            name: "collaborationImage",
+            maxCount: 1,
+        },
+    ]),
     async (req, res) => {
         try {
             const { name, about } = req.body;
-            
+
             if (!name || !about) {
                 return res.status(400).json({
                     message: "All fields are mandatory",
                 });
             }
-			const collaborationImageLocalPath = req.files?.collaborationImage?.[0]?.path;
-			if (!collaborationImageLocalPath) {
+            const collaborationImageFile = req.files?.collaborationImage?.[0];
+            if (!collaborationImageFile?.buffer) {
                 return res.status(409).json({
                     message: "Collaboration Event Image is required!!",
                 });
             }
-			const collaborationImage = await uploadOnCloudinary(collaborationImageLocalPath);
+            const collaborationImage = await uploadOnCloudinary(
+                collaborationImageFile.buffer,
+                {
+                    folder: "collaborations",
+                    public_id: `${Date.now()}-${collaborationImageFile.originalname}`,
+                },
+            );
             const collaborationData = await collaborationModel.create({
-                photoUrl:collaborationImage.url,
+                photoUrl:
+                    collaborationImage.secure_url || collaborationImage.url,
                 name,
                 about,
             });
