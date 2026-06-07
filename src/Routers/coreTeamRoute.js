@@ -4,7 +4,7 @@ const coreTeam = express.Router();
 
 coreTeam.get("/member/coreTeam", async (req, res) => {
     try {
-        const coreTeam = await coreTeamModel.find({ isActive: true });
+		const coreTeam = (await coreTeamModel.find({ isActive: true })).toSorted("createdAt");
 
         return res.status(200).json({
             message: "Current Core Team fetched successfully",
